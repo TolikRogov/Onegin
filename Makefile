@@ -5,7 +5,7 @@ LDFLAGS = -fsanitize=address,alignment
 SOURCE = source
 BUILD_DIR = build
 
-OBJECTS = $(BUILD_DIR)/main.o
+OBJECTS = $(BUILD_DIR)/main.o $(BUILD_DIR)/StringFunctions.o $(BUILD_DIR)/Onegin.o
 EXECUTABLE = $(BUILD_DIR)/ss
 
 $(EXECUTABLE): $(OBJECTS)
@@ -13,7 +13,7 @@ $(EXECUTABLE): $(OBJECTS)
 
 $(BUILD_DIR)/%.o: $(SOURCE)/%.cpp
 	@mkdir -p $(BUILD_DIR)
-	$(CC) $(CFLAGS) $< -o $@
+	@$(CC) $(CFLAGS) $< -o $@
 
 clean:
 	rm -rf $(BUILD_DIR)
