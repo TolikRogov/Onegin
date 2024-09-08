@@ -3,7 +3,7 @@
 
 #include "../include/StringFunctions.hpp"
 
-int Strcmp(const char* string1, const char* string2) {
+int CustomStrcmp(const char* string1, const char* string2) {
 
 	for (size_t i = 0; ; i++) {
 		if (*(string1 + i) != *(string2 + i))

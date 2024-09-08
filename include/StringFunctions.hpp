@@ -3,7 +3,7 @@
 
 #include "../include/Onegin.hpp"
 
-int Strcmp(const char* string1, const char* string2);
+int CustomStrcmp(const char* string1, const char* string2);
 OneginStatusCode PrintString(const char* string);
 OneginStatusCode Puts(const char* string);
 char* Strchr(char* string, int c);

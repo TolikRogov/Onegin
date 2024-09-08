@@ -4,6 +4,10 @@
 #include "../include/Onegin.hpp"
 #include "../include/StringFunctions.hpp"
 
+// TODO:
+//	1) git ignore на build
+//	2) const variables for destruct function
+
 int main() {
 
 	errno = 0;
@@ -13,7 +17,7 @@ int main() {
 	StorageFiller(&storage);
 	ONEGIN_ERROR_CHECK();
 
-	StringSort(&storage);
+	Bubble(&storage);
 	ONEGIN_ERROR_CHECK();
 
 	StringPrinter(&storage);
