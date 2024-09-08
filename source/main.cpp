@@ -5,7 +5,6 @@
 #include "../include/StringFunctions.hpp"
 
 // TODO:
-//	1) git ignore на build
 //	2) const variables for destruct function
 
 int main() {
