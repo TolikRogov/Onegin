@@ -1,16 +1,16 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "../include/Onegin.hpp"
 #include "../include/StringFunctions.hpp"
+
+struct stat FILE_STAT = {};
+
+const char*  ONEGIN_FILE_PATH = "data/onegin.txt";
 
 OneginStatusCode StorageFiller(Storage* storage) {
 
-	FILE* input = fopen("data/onegin.txt", "r");
+	FILE* input = fopen(ONEGIN_FILE_PATH, "r");
 	if(!input)
 		return ONEGIN_FILE_OPEN_ERROR;
 
-	FileSize(input, &storage->buf_inf.buffer_size);
+	FileSize(ONEGIN_FILE_PATH, &storage->buf_inf.buffer_size);
 	ONEGIN_ERROR_CHECK();
 
 	storage->buf_inf.buffer = (char*)calloc(storage->buf_inf.buffer_size, sizeof(char));
@@ -47,19 +47,21 @@ OneginStatusCode StringsFiller(Storage* storage) {
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode FileSize(FILE* file, size_t* size) {
+OneginStatusCode FileSize(const char* file_path, size_t* size) {
 
-	int cur_pos = (int)ftell(file);
-	fseek(file, 0, SEEK_END);
-	*size = (size_t)ftell(file);
-	fseek(file, 0, cur_pos);
+	int stat = open(file_path, O_RDONLY);
+
+	fstat(stat, &FILE_STAT);
+	ONEGIN_ERROR_CHECK();
+
+	*size = (size_t)FILE_STAT.st_size;
 
 	return ONEGIN_NO_ERROR;
 }
 
 OneginStatusCode StorageDestruct(Storage* storage) {
 
-	storage->buf_inf.buffer_size = 0;
+	storage->buf_inf.buffer_size = TRASH;
 
 	free(storage->buf_inf.buffer);
 	storage->buf_inf.buffer = NULL;
@@ -68,7 +70,7 @@ OneginStatusCode StorageDestruct(Storage* storage) {
 		free((*(storage->str_inf + i))->cur_str);
 		(*(storage->str_inf + i))->cur_str = NULL;
 
-		(*(storage->str_inf + i))->cur_str_size = 0;
+		(*(storage->str_inf + i))->cur_str_size = TRASH;
 
 		free(*(storage->str_inf));
 		(*(storage->str_inf)) = NULL;
@@ -77,22 +79,23 @@ OneginStatusCode StorageDestruct(Storage* storage) {
 	free(storage->str_inf);
 	storage->str_inf = NULL;
 
-	storage->str_cnt = 0;
+	storage->str_cnt = TRASH;
 
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode Bubble(Storage* storage) {
+int CompareString(const void* str1, const void* str2) {
 
-	for (size_t i = 0; i < storage->str_cnt - 1; i++) {
-		for (size_t j = i + 1; j < storage->str_cnt; j++) {
-			if (CustomStrcmp((*(storage->str_inf + i))->cur_str, (*(storage->str_inf + j))->cur_str) > 0) {
-				String* tmp = (*(storage->str_inf + i));
-				(*(storage->str_inf + i)) = (*(storage->str_inf + j));
-				(*(storage->str_inf + j)) = tmp;
-			}
-		}
-	}
+	const String* str1_inf = *((const String**)str1);
+	const String* str2_inf = *((const String**)str2);
+
+	return CustomStrcmp(str1_inf->cur_str, str2_inf->cur_str);
+
+}
+
+OneginStatusCode SortingStrings(Storage* storage) {
+
+	qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareString);
 
 	return ONEGIN_NO_ERROR;
 }

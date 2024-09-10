@@ -3,12 +3,17 @@
 
 #include <errno.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <sys/stat.h>
+#include <fcntl.h>
 
 #define ONEGIN_ERROR_CHECK() {													 	 \
 	if (errno != ONEGIN_NO_ERROR)													\
 		fprintf(stderr, "File: %s, Function: %s, Line: %d, Error code: %d \n",  	\
 				__FILE__, __PRETTY_FUNCTION__, __LINE__, errno);					\
 }
+
+const size_t TRASH = 0xBEDA0DED0BEDA;
 
 enum OneginStatusCode {
 	ONEGIN_NO_ERROR,
@@ -34,13 +39,14 @@ struct Storage {
 };
 
 OneginStatusCode StringPrinter(Storage* storage);
-OneginStatusCode Bubble(Storage* storage);
+OneginStatusCode SortingStrings(Storage* storage);
 OneginStatusCode StringsFiller(Storage* storage);
 OneginStatusCode StorageFiller(Storage* storage);
-OneginStatusCode FileSize(FILE* file, size_t* size);
+OneginStatusCode FileSize(const char* file_path, size_t* size);
 OneginStatusCode StorageDestruct(Storage* storage);
 OneginStatusCode CharNewLineToZero(Storage* storage);
 OneginStatusCode StringSizeCounter(Storage* storage);
 OneginStatusCode FromBufferToString(Storage* storage);
+int CompareString(const void* str1, const void* str2);
 
 #endif //UTILITIES_INCLUDE

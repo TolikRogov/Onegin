@@ -1,11 +1,4 @@
-#include <stdio.h>
-#include <stdlib.h>
-
-#include "../include/Onegin.hpp"
 #include "../include/StringFunctions.hpp"
-
-// TODO:
-//	2) const variables for destruct function
 
 int main() {
 
@@ -16,7 +9,7 @@ int main() {
 	StorageFiller(&storage);
 	ONEGIN_ERROR_CHECK();
 
-	Bubble(&storage);
+	SortingStrings(&storage);
 	ONEGIN_ERROR_CHECK();
 
 	StringPrinter(&storage);
