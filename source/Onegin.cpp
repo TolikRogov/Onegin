@@ -1,18 +1,15 @@
-#include "../include/StringFunctions.hpp"
+#include "../include/Onegin.hpp"
 
 struct stat FILE_STAT = {};
-FilePaths file_paths = {};
 
-OneginStatusCode StorageFiller(Storage* storage) {
+OneginStatusCode StorageFiller(Storage* storage, const char* input_file_path) {
 
 	OneginStatusCode status = ONEGIN_NO_ERROR;
 
-	const char* file_path = file_paths.en_onegin_file_path;
-
-	status = FileSize(file_path, &storage->buffer_size);
+	status = FileSize(input_file_path, &storage->buffer_size);
 	ONEGIN_ERROR_CHECK(status);
 
-	FILE* input = fopen(file_path, "rb");
+	FILE* input = fopen(input_file_path, "rb");
 	if(!input)
 		return ONEGIN_FILE_OPEN_ERROR;
 
@@ -85,24 +82,25 @@ OneginStatusCode StorageDestruct(Storage* storage) {
 	return ONEGIN_NO_ERROR;
 }
 
-int CompareString(const void* str1, const void* str2) {
+int CompareStringLeftRight(const void* str1, const void* str2) {
 
 	const String* str1_inf = *(const String* const*)str1;
 	const String* str2_inf = *(const String* const*)str2;
 
-	return CustomStrcmp(str1_inf->cur_str, str2_inf->cur_str);
+	return CustomStrcmpLeftRight(str1_inf->cur_str, str2_inf->cur_str);
 }
 
-OneginStatusCode SortingStrings(Storage* storage) {
+OneginStatusCode LibraryQsort(Storage* storage, SortingMod mod) {
 
-	qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareString);
+	if (mod == FROM_LEFT_TO_RIGHT)
+		qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareStringLeftRight);
 
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode StringPrinter(Storage* storage) {
+OneginStatusCode StringPrinter(Storage* storage, const char* output_file_path) {
 
-	FILE* output = fopen(file_paths.output_file_path, "wb");
+	FILE* output = fopen(output_file_path, "wb");
 	if (!output)
 		return ONEGIN_FILE_OPEN_ERROR;
 
@@ -155,4 +153,30 @@ OneginStatusCode StringFiller(Storage* storage) {
 	}
 
 	return ONEGIN_NO_ERROR;
+}
+
+int CustomStrcmpLeftRight(const char* string1, const char* string2) {
+
+	size_t i = 0;
+	size_t j = 0;
+
+	while ((*(string1 + i) != '\0') && (*(string2 + j) != '\0')) {
+		if (!isalpha(*(string1 + i))) {
+			i++;
+			continue;
+		}
+
+		if (!isalpha(*(string2 + j))) {
+			j++;
+			continue;
+		}
+
+		if (tolower(*(string1 + i)) != tolower(*(string2 + j)))
+			return tolower(*(string1 + i)) - tolower(*(string2 + j));
+
+		i++;
+		j++;
+	}
+
+	return 0;
 }
