@@ -1,58 +1,60 @@
 #include "../include/StringFunctions.hpp"
 
 struct stat FILE_STAT = {};
-
-const char*  ONEGIN_FILE_PATH = "data/onegin.txt";
+FilePaths file_paths = {};
 
 OneginStatusCode StorageFiller(Storage* storage) {
 
-	FILE* input = fopen(ONEGIN_FILE_PATH, "r");
+	OneginStatusCode status = ONEGIN_NO_ERROR;
+
+	const char* file_path = file_paths.en_onegin_file_path;
+
+	status = FileSize(file_path, &storage->buffer_size);
+	ONEGIN_ERROR_CHECK(status);
+
+	FILE* input = fopen(file_path, "rb");
 	if(!input)
 		return ONEGIN_FILE_OPEN_ERROR;
 
-	FileSize(ONEGIN_FILE_PATH, &storage->buf_inf.buffer_size);
-	ONEGIN_ERROR_CHECK();
-
-	storage->buf_inf.buffer = (char*)calloc(storage->buf_inf.buffer_size, sizeof(char));
-	if (!storage->buf_inf.buffer)
+	storage->buffer = (char*)calloc(storage->buffer_size, sizeof(char));
+	if (!storage->buffer)
 		return ONEGIN_ALLOC_ERROR;
 
-	size_t status = fread(storage->buf_inf.buffer, storage->buf_inf.buffer_size, sizeof(char), input);
-	if (!status)
+	size_t read_inf_cnt = fread(storage->buffer, storage->buffer_size, sizeof(char), input);
+	if (!read_inf_cnt)
 		return ONEGIN_FILE_READ_ERROR;
 
-	StringsFiller(storage);
-	ONEGIN_ERROR_CHECK();
+	status = StringsAddrFiller(storage);
+	ONEGIN_ERROR_CHECK(status);
 
 	fclose(input);
 
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode StringsFiller(Storage* storage) {
+OneginStatusCode StringsAddrFiller(Storage* storage) {
 
-	CharNewLineToZero(storage);
-	ONEGIN_ERROR_CHECK();
+	OneginStatusCode status = ONEGIN_NO_ERROR;
+
+	status = CharNewLineToZero(storage);
+	ONEGIN_ERROR_CHECK(status);
 
 	storage->str_inf = (String**)calloc(storage->str_cnt, sizeof(String*));
 	if (!storage->str_inf)
 		return ONEGIN_ALLOC_ERROR;
 
-	StringSizeCounter(storage);
-	ONEGIN_ERROR_CHECK();
-
-	FromBufferToString(storage);
-	ONEGIN_ERROR_CHECK();
+	status = StringFiller(storage);
+	ONEGIN_ERROR_CHECK(status);
 
 	return ONEGIN_NO_ERROR;
 }
 
 OneginStatusCode FileSize(const char* file_path, size_t* size) {
 
-	int stat = open(file_path, O_RDONLY);
+	OneginStatusCode status = ONEGIN_NO_ERROR;
 
-	fstat(stat, &FILE_STAT);
-	ONEGIN_ERROR_CHECK();
+	status = (OneginStatusCode)stat(file_path, &FILE_STAT);
+	ONEGIN_ERROR_CHECK(status);
 
 	*size = (size_t)FILE_STAT.st_size;
 
@@ -61,13 +63,12 @@ OneginStatusCode FileSize(const char* file_path, size_t* size) {
 
 OneginStatusCode StorageDestruct(Storage* storage) {
 
-	storage->buf_inf.buffer_size = TRASH;
+	storage->buffer_size = TRASH;
 
-	free(storage->buf_inf.buffer);
-	storage->buf_inf.buffer = NULL;
+	free(storage->buffer);
+	storage->buffer = NULL;
 
 	for (size_t i = 0; i < storage->str_cnt; i++) {
-		free((*(storage->str_inf + i))->cur_str);
 		(*(storage->str_inf + i))->cur_str = NULL;
 
 		(*(storage->str_inf + i))->cur_str_size = TRASH;
@@ -86,11 +87,10 @@ OneginStatusCode StorageDestruct(Storage* storage) {
 
 int CompareString(const void* str1, const void* str2) {
 
-	const String* str1_inf = *((const String**)str1);
-	const String* str2_inf = *((const String**)str2);
+	const String* str1_inf = *(const String* const*)str1;
+	const String* str2_inf = *(const String* const*)str2;
 
 	return CustomStrcmp(str1_inf->cur_str, str2_inf->cur_str);
-
 }
 
 OneginStatusCode SortingStrings(Storage* storage) {
@@ -102,17 +102,13 @@ OneginStatusCode SortingStrings(Storage* storage) {
 
 OneginStatusCode StringPrinter(Storage* storage) {
 
-	FILE* output = fopen("data/output.txt", "w");
+	FILE* output = fopen(file_paths.output_file_path, "wb");
 	if (!output)
 		return ONEGIN_FILE_OPEN_ERROR;
 
 	for (size_t i = 0; i < storage->str_cnt; i++) {
-		for (size_t j = 0; j < (*(storage->str_inf + i))->cur_str_size - 1; j++) {
-			fprintf(output, "%c", *((*(storage->str_inf + i))->cur_str + j));
-		}
-		if (*((*(storage->str_inf + i))->cur_str) == '\0')
-			continue;
-		fprintf(output, "\n");
+		*((*(storage->str_inf + i))->cur_str + (*(storage->str_inf + i))->cur_str_size - 1) = '\n';
+		fwrite((*(storage->str_inf + i))->cur_str, sizeof(char), (*(storage->str_inf + i))->cur_str_size, output);
 	}
 
 	fclose(output);
@@ -122,9 +118,9 @@ OneginStatusCode StringPrinter(Storage* storage) {
 
 OneginStatusCode CharNewLineToZero(Storage* storage) {
 
-	for (size_t i = 0; i < storage->buf_inf.buffer_size; i++) {
-		if (*(storage->buf_inf.buffer + i) == '\n') {
-			*(storage->buf_inf.buffer + i) = '\0';
+	for (size_t i = 0; i < storage->buffer_size; i++) {
+		if (*(storage->buffer + i) == '\n') {
+			*(storage->buffer + i) = '\0';
 			storage->str_cnt++;
 		}
 	}
@@ -132,52 +128,31 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode StringSizeCounter(Storage* storage) {
+OneginStatusCode StringFiller(Storage* storage) {
 
-	size_t cur_str_size = 0, cur_str_num = 0;
+	size_t cur_str_size = 0;
+	size_t cur_str_num 	= 0;
 
-	for (size_t i = 0; i < storage->buf_inf.buffer_size; i++) {
+	char* cur_str_pointer = storage->buffer;
+
+	for (size_t i = 0; i < storage->buffer_size; i++) {
 
 		cur_str_size++;
 
-		if (*(storage->buf_inf.buffer + i) == '\0') {
+		if (*(storage->buffer + i) == '\0') {
 
 			*(storage->str_inf + cur_str_num) = (String*)calloc(1, sizeof(String));
 			if (!(*(storage->str_inf + cur_str_num)))
 				return ONEGIN_ALLOC_ERROR;
 
 			(*(storage->str_inf + cur_str_num))->cur_str_size = cur_str_size;
+			(*(storage->str_inf + cur_str_num))->cur_str = cur_str_pointer;
 
+			cur_str_pointer = storage->buffer + i + 1;
 			cur_str_num++;
 			cur_str_size = 0;
 		}
 	}
-
-	return ONEGIN_NO_ERROR;
-}
-
-OneginStatusCode FromBufferToString(Storage* storage) {
-
-	size_t* prev_sum_size = (size_t*)calloc(storage->str_cnt + 1, sizeof(size_t));
-	if (!prev_sum_size)
-		return ONEGIN_ALLOC_ERROR;
-
-	for (size_t i = 0; i < storage->str_cnt; i++) {
-
-		String* cur_str_inf = *(storage->str_inf + i);
-
-		cur_str_inf->cur_str = (char*)calloc(cur_str_inf->cur_str_size, sizeof(char));
-		if (!cur_str_inf->cur_str)
-			return ONEGIN_ALLOC_ERROR;
-
-		prev_sum_size[i + 1] = prev_sum_size[i] + cur_str_inf->cur_str_size;
-
-		for (size_t j = 0; j < cur_str_inf->cur_str_size; j++)
-			*(cur_str_inf->cur_str + j) = *(storage->buf_inf.buffer + prev_sum_size[i] + j);
-	}
-
-	free(prev_sum_size);
-	prev_sum_size = NULL;
 
 	return ONEGIN_NO_ERROR;
 }

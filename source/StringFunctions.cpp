@@ -1,16 +1,26 @@
-#include <stdio.h>
-#include <stdlib.h>
-
 #include "../include/StringFunctions.hpp"
 
 int CustomStrcmp(const char* string1, const char* string2) {
 
-	for (size_t i = 0; ; i++) {
-		if (*(string1 + i) != *(string2 + i))
-			return *(string1 + i) - *(string2 + i);
+	size_t i = 0;
+	size_t j = 0;
 
-		if ((*(string1 + i) == '\0') || (*(string2 + i) == '\0'))
-			break;
+	while ((*(string1 + i) != '\0') && (*(string2 + j) != '\0')) {
+// 		if (!isalpha(*(string1 + i))) {
+// 			i++;
+// 			continue;
+// 		}
+//
+// 		if (!isalpha(*(string2 + j))) {
+// 			j++;
+// 			continue;
+// 		}
+
+		if (*(string1 + i) != *(string2 + j))
+			return *(string1 + i) - *(string2 + j);
+
+		i++;
+		j++;
 	}
 
 	return 0;
