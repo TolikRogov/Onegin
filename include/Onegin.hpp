@@ -15,5 +15,6 @@ OneginStatusCode StorageDestruct(Storage* storage);
 
 OneginStatusCode FileSize(const char* file_path, size_t* size);
 OneginStatusCode CharNewLineToZero(Storage* storage);
+OneginStatusCode WorkTime(double time, char* sort_type);
 
 #endif //ONEGIN_INCLUDE

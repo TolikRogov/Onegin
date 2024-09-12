@@ -163,3 +163,10 @@ OneginStatusCode FillerDebugPrinter(String* string) {
 
 	return ONEGIN_NO_ERROR;
 }
+
+OneginStatusCode WorkTime(double time, char* sort_type) {
+
+	printf("Working Time with %s: %lf\n", sort_type, time / CLOCKS_PER_SEC);
+
+	return ONEGIN_NO_ERROR;
+}

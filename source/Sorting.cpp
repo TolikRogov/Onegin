@@ -1,5 +1,12 @@
 #include "../include/Sorting.hpp"
 
+OneginStatusCode CustomQsort(Storage* storage, const SortingMode) {
+
+
+
+	return ONEGIN_NO_ERROR;
+}
+
 OneginStatusCode BubbleSort(Storage* storage, const SortingMode mode) {
 
 	int cmp_value = 0;
@@ -40,7 +47,7 @@ int CompareStringRightLeft(const void* str1, const void* str2) {
 	return CustomStrcmpRightLeft(str1_inf, str2_inf);
 }
 
-OneginStatusCode LibraryQsort(Storage* storage, SortingMode mode) {
+OneginStatusCode LibraryQsort(Storage* storage, const SortingMode mode) {
 
 	if (mode == FROM_LEFT_TO_RIGHT)
 		qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareStringLeftRight);

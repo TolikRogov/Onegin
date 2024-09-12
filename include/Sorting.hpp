@@ -10,6 +10,7 @@ enum SortingMode {
 
 OneginStatusCode BubbleSort(Storage* storage, const SortingMode mode);
 OneginStatusCode LibraryQsort(Storage* storage, SortingMode mode);
+OneginStatusCode CustomQsort(Storage* storage, const SortingMode);
 int CompareStringLeftRight(const void* str1, const void* str2);
 int CompareStringRightLeft(const void* str1, const void* str2);
 int CustomStrcmpLeftRight(const char* string1, const char* string2);

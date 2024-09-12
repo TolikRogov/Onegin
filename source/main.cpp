@@ -2,9 +2,13 @@
 #include "../include/Sorting.hpp"
 
 // TODO:
-//	2) make custom qsort
+//	1) make custom qsort
+//	2) color error check printf
+//	Отличия bubble и lib-qsort
 
 int main(int argc, char* argv[]) {
+
+	clock_t start = clock();
 
 	Storage storage = {};
 	FilePaths file_paths = {};
@@ -22,10 +26,12 @@ int main(int argc, char* argv[]) {
 
 		OneginStatusCode (*Sort) (Storage*, SortingMode);
 
-		if (!CustomStrcmpLeftRight(argv[1], "bubble"))
+		if (!CustomStrcmpLeftRight(argv[1], "bubble-sort"))
 			Sort = BubbleSort;
 		else if (!CustomStrcmpLeftRight(argv[1], "lib-qsort"))
 			Sort = LibraryQsort;
+		else if (!CustomStrcmpLeftRight(argv[1], "custom-qsort"))
+			Sort = CustomQsort;
 		else
 			goto error;
 
@@ -51,6 +57,9 @@ int main(int argc, char* argv[]) {
 	ONEGIN_ERROR_CHECK(status);
 
 	fclose(output);
+
+	clock_t end = clock();
+	WorkTime((double)(end - start), argv[1]);
 
 	return 0;
 }
