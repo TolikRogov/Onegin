@@ -46,9 +46,10 @@ struct Storage {
 	size_t buffer_size;
 	String** str_inf;
 	size_t str_cnt;
+	String** str_inf_original;
 };
 
-OneginStatusCode StringPrinter(Storage* storage, FILE* output);
+OneginStatusCode StringPrinter(String** str_inf, size_t str_cnt, FILE* output);
 OneginStatusCode LibraryQsort(Storage* storage, SortingMod mod);
 OneginStatusCode StringsAddrFiller(Storage* storage);
 OneginStatusCode StorageFiller(Storage* storage, const char* input_file_path);
@@ -56,6 +57,7 @@ OneginStatusCode FileSize(const char* file_path, size_t* size);
 OneginStatusCode StorageDestruct(Storage* storage);
 OneginStatusCode CharNewLineToZero(Storage* storage);
 OneginStatusCode StringFiller(Storage* storage);
+OneginStatusCode FillerDebugPrinter(String* string);
 int CompareStringLeftRight(const void* str1, const void* str2);
 int CompareStringRightLeft(const void* str1, const void* str2);
 int CustomStrcmpLeftRight(const char* string1, const char* string2);

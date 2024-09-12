@@ -1,10 +1,5 @@
 #include "../include/Onegin.hpp"
 
-// TODO:
-//	2) debug print in storage filler, FilterDebugPrint();
-//	3) check error code from fstat
-//	5) print original text of the poem (new massive of pointers copied from storage before qsort) c помощью fwrite(buffer);
-
 int main() {
 
 	Storage storage = {};
@@ -23,14 +18,18 @@ int main() {
 	status = LibraryQsort(&storage, FROM_LEFT_TO_RIGHT);
 	ONEGIN_ERROR_CHECK(status);
 
-	status = StringPrinter(&storage, output);
+	status = StringPrinter(storage.str_inf, storage.str_cnt, output);
 	ONEGIN_ERROR_CHECK(status);
 
 
 	status = LibraryQsort(&storage, FROM_RIGHT_TO_LEFT);
 	ONEGIN_ERROR_CHECK(status);
 
-	status = StringPrinter(&storage, output);
+	status = StringPrinter(storage.str_inf, storage.str_cnt, output);
+	ONEGIN_ERROR_CHECK(status);
+
+
+	status = StringPrinter(storage.str_inf_original, storage.str_cnt, output);
 	ONEGIN_ERROR_CHECK(status);
 
 

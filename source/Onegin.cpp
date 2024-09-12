@@ -40,6 +40,10 @@ OneginStatusCode StringsAddrFiller(Storage* storage) {
 	if (!storage->str_inf)
 		return ONEGIN_ALLOC_ERROR;
 
+	storage->str_inf_original = (String**)calloc(storage->str_cnt, sizeof(String*));
+	if (!storage->str_inf_original)
+		return ONEGIN_ALLOC_ERROR;
+
 	status = StringFiller(storage);
 	ONEGIN_ERROR_CHECK(status);
 
@@ -77,6 +81,9 @@ OneginStatusCode StorageDestruct(Storage* storage) {
 	free(storage->str_inf);
 	storage->str_inf = NULL;
 
+	free(storage->str_inf_original);
+	storage->str_inf_original = NULL;
+
 	storage->str_cnt = TRASH;
 
 	return ONEGIN_NO_ERROR;
@@ -110,11 +117,11 @@ OneginStatusCode LibraryQsort(Storage* storage, SortingMod mod) {
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode StringPrinter(Storage* storage, FILE* output) {
+OneginStatusCode StringPrinter(String** str_inf, size_t str_cnt, FILE* output) {
 
-	for (size_t i = 0; i < storage->str_cnt; i++) {
-		*((*(storage->str_inf + i))->cur_str + (*(storage->str_inf + i))->cur_str_size - 1) = '\n';
-		fwrite((*(storage->str_inf + i))->cur_str, sizeof(char), (*(storage->str_inf + i))->cur_str_size, output);
+	for (size_t i = 0; i < str_cnt; i++) {
+		*((*(str_inf + i))->cur_str + (*(str_inf + i))->cur_str_size - 1) = '\n';
+		fwrite((*(str_inf + i))->cur_str, sizeof(char), (*(str_inf + i))->cur_str_size, output);
 	}
 
 	fprintf(output, "\n");
@@ -151,14 +158,36 @@ OneginStatusCode StringFiller(Storage* storage) {
 			if (!(*(storage->str_inf + cur_str_num)))
 				return ONEGIN_ALLOC_ERROR;
 
+			*(storage->str_inf_original + cur_str_num) = *(storage->str_inf + cur_str_num);
+
 			(*(storage->str_inf + cur_str_num))->cur_str_size = cur_str_size;
 			(*(storage->str_inf + cur_str_num))->cur_str = cur_str_pointer;
+
+			FillerDebugPrinter((*(storage->str_inf + cur_str_num)));
 
 			cur_str_pointer = storage->buffer + i + 1;
 			cur_str_num++;
 			cur_str_size = 0;
 		}
 	}
+
+	return ONEGIN_NO_ERROR;
+}
+
+OneginStatusCode FillerDebugPrinter(String* string) {
+
+	static size_t str_num = 1;
+
+	printf("String number: %zu \n", str_num);
+
+	printf("('%d')", *string->cur_str);
+	printf("%s \n", string->cur_str);
+
+	printf("String size = %zu \n", string->cur_str_size);
+
+	printf("\n");
+
+	str_num++;
 
 	return ONEGIN_NO_ERROR;
 }
