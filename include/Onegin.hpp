@@ -21,7 +21,8 @@ enum OneginStatusCode {
 	ONEGIN_NO_ERROR,
 	ONEGIN_FILE_OPEN_ERROR,
 	ONEGIN_FILE_READ_ERROR,
-	ONEGIN_ALLOC_ERROR
+	ONEGIN_ALLOC_ERROR,
+	ONEGIN_SORT_MOD_ERROR
 };
 
 enum SortingMod {
@@ -37,8 +38,7 @@ struct String {
 struct FilePaths {
 	const char* const onegin_ru = "data/onegin_ru.txt";
 	const char* const onegin_en = "data/onegin_en.txt";
-	const char* const output_lr = "data/output_lr.txt";
-	const char* const output_rl = "data/output_rl.txt";
+	const char* const output	= "data/output.txt";
 };
 
 struct Storage {
@@ -48,7 +48,7 @@ struct Storage {
 	size_t str_cnt;
 };
 
-OneginStatusCode StringPrinter(Storage* storage, const char* output_file_path);
+OneginStatusCode StringPrinter(Storage* storage, FILE* output);
 OneginStatusCode LibraryQsort(Storage* storage, SortingMod mod);
 OneginStatusCode StringsAddrFiller(Storage* storage);
 OneginStatusCode StorageFiller(Storage* storage, const char* input_file_path);
@@ -57,6 +57,8 @@ OneginStatusCode StorageDestruct(Storage* storage);
 OneginStatusCode CharNewLineToZero(Storage* storage);
 OneginStatusCode StringFiller(Storage* storage);
 int CompareStringLeftRight(const void* str1, const void* str2);
+int CompareStringRightLeft(const void* str1, const void* str2);
 int CustomStrcmpLeftRight(const char* string1, const char* string2);
+int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2_inf);
 
 #endif //UTILITIES_INCLUDE

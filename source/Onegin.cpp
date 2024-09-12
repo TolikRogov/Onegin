@@ -90,26 +90,34 @@ int CompareStringLeftRight(const void* str1, const void* str2) {
 	return CustomStrcmpLeftRight(str1_inf->cur_str, str2_inf->cur_str);
 }
 
+int CompareStringRightLeft(const void* str1, const void* str2) {
+
+	const String* str1_inf = *((const String* const*)str1);
+	const String* str2_inf = *((const String* const*)str2);
+
+	return CustomStrcmpRightLeft(str1_inf, str2_inf);
+}
+
 OneginStatusCode LibraryQsort(Storage* storage, SortingMod mod) {
 
 	if (mod == FROM_LEFT_TO_RIGHT)
 		qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareStringLeftRight);
+	else if (mod == FROM_RIGHT_TO_LEFT)
+		qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareStringRightLeft);
+	else
+		return ONEGIN_SORT_MOD_ERROR;
 
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode StringPrinter(Storage* storage, const char* output_file_path) {
-
-	FILE* output = fopen(output_file_path, "wb");
-	if (!output)
-		return ONEGIN_FILE_OPEN_ERROR;
+OneginStatusCode StringPrinter(Storage* storage, FILE* output) {
 
 	for (size_t i = 0; i < storage->str_cnt; i++) {
 		*((*(storage->str_inf + i))->cur_str + (*(storage->str_inf + i))->cur_str_size - 1) = '\n';
 		fwrite((*(storage->str_inf + i))->cur_str, sizeof(char), (*(storage->str_inf + i))->cur_str_size, output);
 	}
 
-	fclose(output);
+	fprintf(output, "\n");
 
 	return ONEGIN_NO_ERROR;
 }
@@ -157,25 +165,51 @@ OneginStatusCode StringFiller(Storage* storage) {
 
 int CustomStrcmpLeftRight(const char* string1, const char* string2) {
 
-	size_t i = 0;
-	size_t j = 0;
+	size_t str1_pnt = 0;
+	size_t str2_pnt = 0;
 
-	while ((*(string1 + i) != '\0') && (*(string2 + j) != '\0')) {
-		if (!isalpha(*(string1 + i))) {
-			i++;
+	while ((*(string1 + str1_pnt) != '\0') && (*(string2 + str2_pnt) != '\0')) {
+		if (!isalpha(*(string1 + str1_pnt))) {
+			str1_pnt++;
 			continue;
 		}
 
-		if (!isalpha(*(string2 + j))) {
-			j++;
+		if (!isalpha(*(string2 + str2_pnt))) {
+			str2_pnt++;
 			continue;
 		}
 
-		if (tolower(*(string1 + i)) != tolower(*(string2 + j)))
-			return tolower(*(string1 + i)) - tolower(*(string2 + j));
+		if (tolower(*(string1 + str1_pnt)) != tolower(*(string2 + str2_pnt)))
+			return tolower(*(string1 + str1_pnt)) - tolower(*(string2 + str2_pnt));
 
-		i++;
-		j++;
+		str1_pnt++;
+		str2_pnt++;
+	}
+
+	return 0;
+}
+
+int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2_inf) {
+
+	size_t str1_pnt = str1_inf->cur_str_size - 1;
+	size_t str2_pnt = str2_inf->cur_str_size - 1;
+
+	while (str1_pnt != 0 && str2_pnt != 0) {
+		if (!isalpha(*(str1_inf->cur_str + str1_pnt))) {
+			str1_pnt--;
+			continue;
+		}
+
+		if (!isalpha(*(str2_inf->cur_str + str2_pnt))) {
+			str2_pnt--;
+			continue;
+		}
+
+		if (tolower(*(str1_inf->cur_str + str1_pnt)) != tolower(*(str2_inf->cur_str + str2_pnt)))
+			return tolower(*(str1_inf->cur_str + str1_pnt)) - tolower(*(str2_inf->cur_str + str2_pnt));
+
+		str1_pnt--;
+		str2_pnt--;
 	}
 
 	return 0;
