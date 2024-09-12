@@ -2,10 +2,9 @@
 #include "../include/Sorting.hpp"
 
 // TODO:
-//	1) return bubble sort
 //	2) make custom qsort
 
-int main() {
+int main(int argc, char* argv[]) {
 
 	Storage storage = {};
 	FilePaths file_paths = {};
@@ -19,24 +18,34 @@ int main() {
 	status = StorageFiller(&storage, file_paths.onegin_en);
 	ONEGIN_ERROR_CHECK(status);
 
+	if (argc > 1) {
 
-	status = LibraryQsort(&storage, FROM_LEFT_TO_RIGHT);
-	ONEGIN_ERROR_CHECK(status);
+		OneginStatusCode (*Sort) (Storage*, SortingMode);
 
-	status = StringPrinter(storage.str_inf, storage.str_cnt, output);
-	ONEGIN_ERROR_CHECK(status);
+		if (!CustomStrcmpLeftRight(argv[1], "bubble"))
+			Sort = BubbleSort;
+		else if (!CustomStrcmpLeftRight(argv[1], "lib-qsort"))
+			Sort = LibraryQsort;
+		else
+			goto error;
 
+		for (size_t i = 0; i < 2; i++) {
+			status = Sort(&storage, (SortingMode)i);
+			ONEGIN_ERROR_CHECK(status);
 
-	status = LibraryQsort(&storage, FROM_RIGHT_TO_LEFT);
-	ONEGIN_ERROR_CHECK(status);
+			status = StringPrinter(storage.str_inf, storage.str_cnt, output);
+			ONEGIN_ERROR_CHECK(status);
+		}
 
-	status = StringPrinter(storage.str_inf, storage.str_cnt, output);
-	ONEGIN_ERROR_CHECK(status);
-
+	}
+	else {
+		error:
+			status = ONEGIN_SORT_MODE_ERROR;
+			ONEGIN_ERROR_CHECK(status);
+	}
 
 	status = StringPrinter(storage.str_inf_original, storage.str_cnt, output);
 	ONEGIN_ERROR_CHECK(status);
-
 
 	status = StorageDestruct(&storage);
 	ONEGIN_ERROR_CHECK(status);

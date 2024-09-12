@@ -3,12 +3,13 @@
 
 #include "../include/utilities.hpp"
 
-enum SortingMod {
+enum SortingMode {
 	FROM_LEFT_TO_RIGHT,
 	FROM_RIGHT_TO_LEFT
 };
 
-OneginStatusCode LibraryQsort(Storage* storage, SortingMod mod);
+OneginStatusCode BubbleSort(Storage* storage, const SortingMode mode);
+OneginStatusCode LibraryQsort(Storage* storage, SortingMode mode);
 int CompareStringLeftRight(const void* str1, const void* str2);
 int CompareStringRightLeft(const void* str1, const void* str2);
 int CustomStrcmpLeftRight(const char* string1, const char* string2);

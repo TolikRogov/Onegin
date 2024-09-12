@@ -12,7 +12,7 @@ enum OneginStatusCode {
 	ONEGIN_FILE_OPEN_ERROR,
 	ONEGIN_FILE_READ_ERROR,
 	ONEGIN_ALLOC_ERROR,
-	ONEGIN_SORT_MOD_ERROR
+	ONEGIN_SORT_MODE_ERROR
 };
 
 struct FilePaths {
@@ -36,8 +36,8 @@ struct Storage {
 
 #define ONEGIN_ERROR_CHECK(status) {												 \
 	if (status != ONEGIN_NO_ERROR) {												\
-		fprintf(stderr, "File: %s, Function: %s, Line: %d, Error code: %d \n",  	\
-				__FILE__, __PRETTY_FUNCTION__, __LINE__, status);					\
+		fprintf(stderr, "Error code: %d, File: %20s, Function: %60s, Line: %3d \n", \
+				status, __FILE__, __PRETTY_FUNCTION__, __LINE__);					\
 		return status;																\
 	}																				\
 }
