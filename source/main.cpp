@@ -1,4 +1,9 @@
 #include "../include/Onegin.hpp"
+#include "../include/Sorting.hpp"
+
+// TODO:
+//	1) return bubble sort
+//	2) make custom qsort
 
 int main() {
 
