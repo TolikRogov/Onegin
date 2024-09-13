@@ -6,7 +6,7 @@ SOURCE = source
 BUILD_DIR = build
 
 OBJECTS = $(BUILD_DIR)/main.o $(BUILD_DIR)/Sorting.o $(BUILD_DIR)/Onegin.o
-EXECUTABLE = $(BUILD_DIR)/ss
+EXECUTABLE = $(BUILD_DIR)/onegin
 
 $(EXECUTABLE): $(OBJECTS)
 	@$(CC) $(LDFLAGS) $(OBJECTS) -o $@

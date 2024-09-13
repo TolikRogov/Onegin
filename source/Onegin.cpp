@@ -50,6 +50,38 @@ OneginStatusCode StringsAddrFiller(Storage* storage) {
 	return ONEGIN_NO_ERROR;
 }
 
+OneginStatusCode StringFiller(Storage* storage) {
+
+	size_t cur_str_size = 0;
+	size_t cur_str_num 	= 0;
+
+	char* cur_str_pointer = storage->buffer;
+
+	for (size_t i = 0; i < storage->buffer_size; i++) {
+
+		cur_str_size++;
+
+		if (*(storage->buffer + i) == '\0') {
+
+			String* cur_str_inf = {};
+			fprintf(stderr, "%p", cur_str_inf);
+			*(storage->str_inf + cur_str_num) = cur_str_inf;
+			*(storage->str_inf_original + cur_str_num) = *(storage->str_inf + cur_str_num);
+
+			(*(storage->str_inf + cur_str_num))->cur_str_size = cur_str_size;
+			(*(storage->str_inf + cur_str_num))->cur_str = cur_str_pointer;
+
+			FillerDebugPrinter((*(storage->str_inf + cur_str_num)));
+
+			cur_str_pointer = storage->buffer + i + 1;
+			cur_str_num++;
+			cur_str_size = 0;
+		}
+	}
+
+	return ONEGIN_NO_ERROR;
+}
+
 OneginStatusCode FileSize(const char* file_path, size_t* size) {
 
 	OneginStatusCode status = ONEGIN_NO_ERROR;
@@ -74,17 +106,16 @@ OneginStatusCode StorageDestruct(Storage* storage) {
 
 		(*(storage->str_inf + i))->cur_str_size = TRASH;
 
-		free(*(storage->str_inf));
-		(*(storage->str_inf)) = NULL;
+		(*(storage->str_inf + i)) = NULL;
 	}
+
+	storage->str_cnt = TRASH;
 
 	free(storage->str_inf);
 	storage->str_inf = NULL;
 
 	free(storage->str_inf_original);
 	storage->str_inf_original = NULL;
-
-	storage->str_cnt = TRASH;
 
 	return ONEGIN_NO_ERROR;
 }
@@ -107,39 +138,6 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 		if (*(storage->buffer + i) == '\n') {
 			*(storage->buffer + i) = '\0';
 			storage->str_cnt++;
-		}
-	}
-
-	return ONEGIN_NO_ERROR;
-}
-
-OneginStatusCode StringFiller(Storage* storage) {
-
-	size_t cur_str_size = 0;
-	size_t cur_str_num 	= 0;
-
-	char* cur_str_pointer = storage->buffer;
-
-	for (size_t i = 0; i < storage->buffer_size; i++) {
-
-		cur_str_size++;
-
-		if (*(storage->buffer + i) == '\0') {
-
-			*(storage->str_inf + cur_str_num) = (String*)calloc(1, sizeof(String));
-			if (!(*(storage->str_inf + cur_str_num)))
-				return ONEGIN_ALLOC_ERROR;
-
-			*(storage->str_inf_original + cur_str_num) = *(storage->str_inf + cur_str_num);
-
-			(*(storage->str_inf + cur_str_num))->cur_str_size = cur_str_size;
-			(*(storage->str_inf + cur_str_num))->cur_str = cur_str_pointer;
-
-			FillerDebugPrinter((*(storage->str_inf + cur_str_num)));
-
-			cur_str_pointer = storage->buffer + i + 1;
-			cur_str_num++;
-			cur_str_size = 0;
 		}
 	}
 

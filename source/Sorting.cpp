@@ -1,34 +1,22 @@
 #include "../include/Sorting.hpp"
 
-OneginStatusCode CustomQsort(Storage* storage, const SortingMode) {
+void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator) {
 
+	for (size_t i = 0; i < cnt; i++) {
+		for (size_t j = 0; j < cnt - 1; j++) {
 
+			void* el1 = ((String**)array + j * size);
+			void* el2 = ((String**)array + (j + 1) * size);
 
-	return ONEGIN_NO_ERROR;
-}
-
-OneginStatusCode BubbleSort(Storage* storage, const SortingMode mode) {
-
-	int cmp_value = 0;
-	for (size_t i = 0; i < storage->str_cnt - 1; i++) {
-		for (size_t j = i + 1; j < storage->str_cnt; j++) {
-			if (mode == FROM_LEFT_TO_RIGHT)
-				cmp_value = CustomStrcmpLeftRight((*(storage->str_inf + i))->cur_str,
-												  (*(storage->str_inf + j))->cur_str);
-			else if (mode == FROM_RIGHT_TO_LEFT)
-				cmp_value = CustomStrcmpRightLeft((*(storage->str_inf + i)), (*(storage->str_inf + j)));
-			else
-				return ONEGIN_SORT_MODE_ERROR;
-
-			if (cmp_value >= 0) {
-				String* tmp = (*(storage->str_inf + i));
-				(*(storage->str_inf + i)) = (*(storage->str_inf + j));
-				(*(storage->str_inf + j)) = tmp;
+			if (comparator(el1, el2) < 0) {
+				void* tmp = el1;
+				el1 = el2;
+				el2 = tmp;
 			}
+
 		}
 	}
 
-	return ONEGIN_NO_ERROR;
 }
 
 int CompareStringLeftRight(const void* str1, const void* str2) {
@@ -45,18 +33,6 @@ int CompareStringRightLeft(const void* str1, const void* str2) {
 	const String* str2_inf = *((const String* const*)str2);
 
 	return CustomStrcmpRightLeft(str1_inf, str2_inf);
-}
-
-OneginStatusCode LibraryQsort(Storage* storage, const SortingMode mode) {
-
-	if (mode == FROM_LEFT_TO_RIGHT)
-		qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareStringLeftRight);
-	else if (mode == FROM_RIGHT_TO_LEFT)
-		qsort(storage->str_inf, storage->str_cnt, sizeof(String*), CompareStringRightLeft);
-	else
-		return ONEGIN_SORT_MODE_ERROR;
-
-	return ONEGIN_NO_ERROR;
 }
 
 int CustomStrcmpLeftRight(const char* string1, const char* string2) {

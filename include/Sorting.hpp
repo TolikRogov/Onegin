@@ -8,11 +8,11 @@ enum SortingMode {
 	FROM_RIGHT_TO_LEFT
 };
 
-OneginStatusCode BubbleSort(Storage* storage, const SortingMode mode);
-OneginStatusCode LibraryQsort(Storage* storage, SortingMode mode);
-OneginStatusCode CustomQsort(Storage* storage, const SortingMode);
+void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator);
+
 int CompareStringLeftRight(const void* str1, const void* str2);
 int CompareStringRightLeft(const void* str1, const void* str2);
+
 int CustomStrcmpLeftRight(const char* string1, const char* string2);
 int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2_inf);
 

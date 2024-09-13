@@ -8,6 +8,17 @@
 #include <fcntl.h>
 #include <time.h>
 
+#define ONEGIN_ERROR_CHECK(status) {												 \
+	if (status != ONEGIN_NO_ERROR) {												\
+		fprintf(stderr, "Error code: %d, File: %s, Function: %s, Line: %d \n", \
+				status, __FILE__, __PRETTY_FUNCTION__, __LINE__);					\
+		return status;																\
+	}																				\
+}
+
+typedef int  (*compare_func_t) (const void*, const void*);
+typedef void (*sort_func_t)	   (void*, size_t, size_t, compare_func_t);
+
 enum OneginStatusCode {
 	ONEGIN_NO_ERROR,
 	ONEGIN_FILE_OPEN_ERROR,
@@ -34,13 +45,5 @@ struct Storage {
 	size_t str_cnt;
 	String** str_inf_original;
 };
-
-#define ONEGIN_ERROR_CHECK(status) {												 \
-	if (status != ONEGIN_NO_ERROR) {												\
-		fprintf(stderr, "Error code: %d, File: %20s, Function: %60s, Line: %3d \n", \
-				status, __FILE__, __PRETTY_FUNCTION__, __LINE__);					\
-		return status;																\
-	}																				\
-}
 
 #endif //UTILITIES_INCLUDE

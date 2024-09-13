@@ -4,44 +4,56 @@
 // TODO:
 //	1) make custom qsort
 //	2) color error check printf
-//	Отличия bubble и lib-qsort
+//	3) errno, perror, strerror
 
 int main(int argc, char* argv[]) {
 
 	clock_t start = clock();
 
-	Storage storage = {};
-	FilePaths file_paths = {};
-
-	FILE* output = fopen(file_paths.output, "wb");
-	if (!output)
-		return ONEGIN_FILE_OPEN_ERROR;
-
 	OneginStatusCode status = ONEGIN_NO_ERROR;
-
-	status = StorageFiller(&storage, file_paths.onegin_en);
-	ONEGIN_ERROR_CHECK(status);
 
 	if (argc > 1) {
 
-		OneginStatusCode (*Sort) (Storage*, SortingMode);
+		Storage   storage 	= {};
+		FilePaths file_paths = {};
+
+		compare_func_t comparators[] = { CompareStringLeftRight, CompareStringRightLeft };
+
+		FILE* output = fopen(file_paths.output, "wb");
+		if (!output)
+			return ONEGIN_FILE_OPEN_ERROR;
+
+		status = StorageFiller(&storage, file_paths.onegin_en);
+		ONEGIN_ERROR_CHECK(status);
+
+		void (*Sort) (void*, size_t, size_t, compare_func_t);
 
 		if (!CustomStrcmpLeftRight(argv[1], "bubble-sort"))
 			Sort = BubbleSort;
 		else if (!CustomStrcmpLeftRight(argv[1], "lib-qsort"))
-			Sort = LibraryQsort;
-		else if (!CustomStrcmpLeftRight(argv[1], "custom-qsort"))
-			Sort = CustomQsort;
+			Sort = qsort;
 		else
 			goto error;
 
-		for (size_t i = 0; i < 2; i++) {
-			status = Sort(&storage, (SortingMode)i);
+// 		for (size_t i = 0; i < 2; i++) {
+//
+// 			Sort(storage.str_inf, storage.str_cnt, sizeof(String*), comparators[i]);
+//
+// 			status = StringPrinter(storage.str_inf, storage.str_cnt, output);
+// 			ONEGIN_ERROR_CHECK(status);
+//
+// 		}
+
+			status = StringPrinter(storage.str_inf_original, storage.str_cnt, output);
 			ONEGIN_ERROR_CHECK(status);
 
-			status = StringPrinter(storage.str_inf, storage.str_cnt, output);
+			status = StorageDestruct(&storage);
 			ONEGIN_ERROR_CHECK(status);
-		}
+
+			fclose(output);
+
+			clock_t end = clock();
+			WorkTime((double)(end - start), argv[1]);
 
 	}
 	else {
@@ -49,17 +61,6 @@ int main(int argc, char* argv[]) {
 			status = ONEGIN_SORT_MODE_ERROR;
 			ONEGIN_ERROR_CHECK(status);
 	}
-
-	status = StringPrinter(storage.str_inf_original, storage.str_cnt, output);
-	ONEGIN_ERROR_CHECK(status);
-
-	status = StorageDestruct(&storage);
-	ONEGIN_ERROR_CHECK(status);
-
-	fclose(output);
-
-	clock_t end = clock();
-	WorkTime((double)(end - start), argv[1]);
 
 	return 0;
 }
