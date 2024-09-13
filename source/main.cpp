@@ -5,6 +5,7 @@
 //	1) make custom qsort
 //	2) color error check printf
 //	3) errno, perror, strerror
+//	4) html log file
 
 int main(int argc, char* argv[]) {
 
@@ -35,16 +36,16 @@ int main(int argc, char* argv[]) {
 		else
 			goto error;
 
-// 		for (size_t i = 0; i < 2; i++) {
-//
-// 			Sort(storage.str_inf, storage.str_cnt, sizeof(String*), comparators[i]);
-//
-// 			status = StringPrinter(storage.str_inf, storage.str_cnt, output);
-// 			ONEGIN_ERROR_CHECK(status);
-//
-// 		}
+		for (size_t i = 0; i < 2; i++) {
 
-			status = StringPrinter(storage.str_inf_original, storage.str_cnt, output);
+			Sort(storage.text, storage.str_cnt, sizeof(String), comparators[i]);
+
+			status = StringPrinter(storage.text, storage.str_cnt, output);
+			ONEGIN_ERROR_CHECK(status);
+
+		}
+
+			status = StringPrinter(storage.orig_text, storage.str_cnt, output);
 			ONEGIN_ERROR_CHECK(status);
 
 			status = StorageDestruct(&storage);

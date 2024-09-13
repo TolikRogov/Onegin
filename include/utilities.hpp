@@ -41,9 +41,10 @@ struct String {
 struct Storage {
 	char* buffer;
 	size_t buffer_size;
-	String** str_inf;
+
+	String* text;
+	String* orig_text;
 	size_t str_cnt;
-	String** str_inf_original;
 };
 
 #endif //UTILITIES_INCLUDE

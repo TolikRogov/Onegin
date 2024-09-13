@@ -5,8 +5,8 @@ void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator)
 	for (size_t i = 0; i < cnt; i++) {
 		for (size_t j = 0; j < cnt - 1; j++) {
 
-			void* el1 = ((String**)array + j * size);
-			void* el2 = ((String**)array + (j + 1) * size);
+			void* el1 = ((String*)array + j * size);
+			void* el2 = ((String*)array + (j + 1) * size);
 
 			if (comparator(el1, el2) < 0) {
 				void* tmp = el1;
@@ -21,16 +21,16 @@ void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator)
 
 int CompareStringLeftRight(const void* str1, const void* str2) {
 
-	const String* str1_inf = *(const String* const*)str1;
-	const String* str2_inf = *(const String* const*)str2;
+	const String* str1_inf = (const String*)str1;
+	const String* str2_inf = (const String*)str2;
 
 	return CustomStrcmpLeftRight(str1_inf->cur_str, str2_inf->cur_str);
 }
 
 int CompareStringRightLeft(const void* str1, const void* str2) {
 
-	const String* str1_inf = *((const String* const*)str1);
-	const String* str2_inf = *((const String* const*)str2);
+	const String* str1_inf = (const String*)str1;
+	const String* str2_inf = (const String*)str2;
 
 	return CustomStrcmpRightLeft(str1_inf, str2_inf);
 }

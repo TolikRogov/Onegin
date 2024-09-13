@@ -5,8 +5,8 @@
 
 const size_t TRASH = 0xBEDA0DED0BEDA;
 
-OneginStatusCode FillerDebugPrinter(String* string);
-OneginStatusCode StringPrinter(String** str_inf, size_t str_cnt, FILE* output);
+OneginStatusCode FillerDebugPrinter(const String string);
+OneginStatusCode StringPrinter(String* text, size_t str_cnt, FILE* output);
 
 OneginStatusCode StorageFiller(Storage* storage, const char* input_file_path);
 OneginStatusCode StringsAddrFiller(Storage* storage);
