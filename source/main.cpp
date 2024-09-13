@@ -3,8 +3,6 @@
 
 // TODO:
 //	1) make custom qsort
-//	2) color error check printf
-//	3) errno, perror, strerror
 //	4) html log file
 
 int main(int argc, char* argv[]) {

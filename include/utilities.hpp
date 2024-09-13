@@ -8,12 +8,12 @@
 #include <fcntl.h>
 #include <time.h>
 
-#define ONEGIN_ERROR_CHECK(status) {												 \
-	if (status != ONEGIN_NO_ERROR) {												\
-		fprintf(stderr, "Error code: %d, File: %s, Function: %s, Line: %d \n", \
-				status, __FILE__, __PRETTY_FUNCTION__, __LINE__);					\
-		return status;																\
-	}																				\
+#define ONEGIN_ERROR_CHECK(status) {																	 		 \
+	if (status != ONEGIN_NO_ERROR) {																			\
+		fprintf(stderr, "\033[31;1mError code: %d,\033[0m \033[33;4mFile: %s, Function: %s, Line: %d \n\033[0m",\
+				status, __FILE__, __PRETTY_FUNCTION__, __LINE__);												\
+		return status;																							\
+	}																											\
 }
 
 typedef int  (*compare_func_t) (const void*, const void*);
