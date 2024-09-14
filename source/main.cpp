@@ -3,7 +3,6 @@
 
 // TODO:
 //	1) make custom qsort
-//	4) html log file
 
 int main(int argc, char* argv[]) {
 
@@ -21,6 +20,8 @@ int main(int argc, char* argv[]) {
 		FILE* output = fopen(file_paths.output, "wb");
 		if (!output)
 			return ONEGIN_FILE_OPEN_ERROR;
+
+		HtmlLogStarter();
 
 		status = StorageFiller(&storage, file_paths.onegin_en);
 		ONEGIN_ERROR_CHECK(status);
@@ -53,6 +54,8 @@ int main(int argc, char* argv[]) {
 
 			clock_t end = clock();
 			WorkTime((double)(end - start), argv[1]);
+
+			HtmlLogFinisher();
 
 	}
 	else {

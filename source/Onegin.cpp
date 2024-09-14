@@ -137,17 +137,21 @@ OneginStatusCode FillerDebugPrinter(const String* string) {
 
 	static size_t str_num = 1;
 
-	printf("String number: %zu \n", str_num);
+	printf("\t\t\t<tr class='string_inf'>\n");
 
-	printf("Struct pointer: %p\n", string);
+	printf("\t\t\t\t<td class='string_number'>%zu</td>\n", str_num);
 
-	printf("String pointer: %p\n", string->cur_str);
+	printf("\t\t\t\t<td class='struct_pointer'>%p</td>\n", string);
 
-	printf("String: ('%d')", *(string->cur_str));
+	printf("\t\t\t\t<td class='string_pointer'>%p</td>\n", string->cur_str);
+
+	printf("\t\t\t\t<td class='string'>('%d')", *(string->cur_str));
 	printf("%s", string->cur_str);
-	printf("('%d')\n", *(string->cur_str + string->cur_str_size - 2));
+	printf("('%d')</td>\n", *(string->cur_str + string->cur_str_size - 2));
 
-	printf("String size = %zu \n", string->cur_str_size);
+	printf("\t\t\t\t<td class='string_size'>%zu<td>\n", string->cur_str_size);
+
+	printf("\t\t\t</tr>\n");
 
 	printf("\n");
 
@@ -158,7 +162,8 @@ OneginStatusCode FillerDebugPrinter(const String* string) {
 
 OneginStatusCode WorkTime(double time, char* sort_type) {
 
-	printf("Working Time with %s: %lf\n", sort_type, time / CLOCKS_PER_SEC);
+	printf("\t\t</table>\n");
+	printf("\t\t<p><a name='time'>Working Time with %s: %lf</a></p>\n", sort_type, time / CLOCKS_PER_SEC);
 
 	return ONEGIN_NO_ERROR;
 }

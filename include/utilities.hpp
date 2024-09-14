@@ -47,4 +47,7 @@ struct Storage {
 	size_t str_cnt;
 };
 
+OneginStatusCode HtmlLogStarter();
+OneginStatusCode HtmlLogFinisher();
+
 #endif //UTILITIES_INCLUDE
