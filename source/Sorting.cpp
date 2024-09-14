@@ -6,13 +6,13 @@ void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator)
 		for (size_t j = i + 1; j < cnt; j++) {
 
 			if (comparator(((char*)array + i * size), ((char*)array + j * size)) > 0) {
-				String tmp = *((String*)array + i);
 
-				((String*)array + i)->cur_str = ((String*)array + j)->cur_str;
-				((String*)array + i)->cur_str_size = ((String*)array + j)->cur_str_size;
+				for (size_t k = 0; k < size; k++) {
+					char tmp = *(((char*)array + i * size) + k);
+					*(((char*)array + i * size) + k) = *(((char*)array + j * size) + k);
+					*(((char*)array + j * size) + k) = tmp;
+				}
 
-				((String*)array + j)->cur_str = tmp.cur_str;
-				((String*)array + j)->cur_str_size = tmp.cur_str_size;
 			}
 
 		}

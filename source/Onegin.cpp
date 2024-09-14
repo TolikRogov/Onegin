@@ -68,7 +68,7 @@ OneginStatusCode StringFiller(Storage* storage) {
 
 			*(storage->orig_text + cur_str_num) = *(storage->text + cur_str_num);
 
-			FillerDebugPrinter((*(storage->text + cur_str_num)));
+			FillerDebugPrinter((storage->text + cur_str_num));
 
 			cur_str_pointer = storage->buffer + i + 1;
 			cur_str_num++;
@@ -133,18 +133,21 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode FillerDebugPrinter(const String string) {
+OneginStatusCode FillerDebugPrinter(const String* string) {
 
 	static size_t str_num = 1;
 
 	printf("String number: %zu \n", str_num);
 
-	printf("String pointer: %p\n", string.cur_str);
-	printf("String: ('%d')", *(string.cur_str));
-	printf("%s", string.cur_str);
-	printf("('%d')\n", *(string.cur_str + string.cur_str_size - 2));
+	printf("Struct pointer: %p\n", string);
 
-	printf("String size = %zu \n", string.cur_str_size);
+	printf("String pointer: %p\n", string->cur_str);
+
+	printf("String: ('%d')", *(string->cur_str));
+	printf("%s", string->cur_str);
+	printf("('%d')\n", *(string->cur_str + string->cur_str_size - 2));
+
+	printf("String size = %zu \n", string->cur_str_size);
 
 	printf("\n");
 
