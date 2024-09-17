@@ -1,5 +1,37 @@
 #include "../include/Sorting.hpp"
 
+void CustomQsort(void* array, size_t cnt, size_t size, compare_func_t comparator) {
+
+	size_t i = 0;
+	size_t j = cnt - 1;
+
+	char* middle = ((char*)array + cnt / 2 * size);
+
+	do {
+		while (comparator(((char*)array + i * size), middle) < 0)
+			i++;
+		while (comparator(((char*)array + j * size), middle) > 0)
+			j--;
+
+		if (i <= j) {
+			for (size_t k = 0; k < size; k++) {
+				char tmp = *(((char*)array + i * size) + k);
+				*(((char*)array + i * size) + k) = *(((char*)array + j * size) + k);
+				*(((char*)array + j * size) + k) = tmp;
+			}
+
+			i++;
+			j--;
+		}
+	} while (i <= j);
+
+	if (j > 0)
+		CustomQsort(array, j + 1, size, comparator);
+	if (i < cnt)
+		CustomQsort(((char*)array + i * size), cnt - j, size, comparator);
+
+}
+
 void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator) {
 
 	for (size_t i = 0; i < cnt - 1; i++) {

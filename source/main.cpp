@@ -32,6 +32,8 @@ int main(int argc, char* argv[]) {
 			Sort = BubbleSort;
 		else if (!CustomStrcmpLeftRight(argv[1], "lib-qsort"))
 			Sort = qsort;
+		else if (!CustomStrcmpLeftRight(argv[1], "custom-qsort"))
+			Sort = CustomQsort;
 		else
 			goto error;
 

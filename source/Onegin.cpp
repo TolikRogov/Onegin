@@ -132,38 +132,3 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 
 	return ONEGIN_NO_ERROR;
 }
-
-OneginStatusCode FillerDebugPrinter(const String* string) {
-
-	static size_t str_num = 1;
-
-	printf("\t\t\t<tr class='string_inf'>\n");
-
-	printf("\t\t\t\t<td class='string_number'>%zu</td>\n", str_num);
-
-	printf("\t\t\t\t<td class='struct_pointer'>%p</td>\n", string);
-
-	printf("\t\t\t\t<td class='string_pointer'>%p</td>\n", string->cur_str);
-
-	printf("\t\t\t\t<td class='string'>('%d')", *(string->cur_str));
-	printf("%s", string->cur_str);
-	printf("('%d')</td>\n", *(string->cur_str + string->cur_str_size - 2));
-
-	printf("\t\t\t\t<td class='string_size'>%zu<td>\n", string->cur_str_size);
-
-	printf("\t\t\t</tr>\n");
-
-	printf("\n");
-
-	str_num++;
-
-	return ONEGIN_NO_ERROR;
-}
-
-OneginStatusCode WorkTime(double time, char* sort_type) {
-
-	printf("\t\t</table>\n");
-	printf("\t\t<p><a name='time'>Working Time with %s: %lf</a></p>\n", sort_type, time / CLOCKS_PER_SEC);
-
-	return ONEGIN_NO_ERROR;
-}

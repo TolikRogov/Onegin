@@ -9,6 +9,7 @@ enum SortingMode {
 };
 
 void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator);
+void CustomQsort(void* array, size_t cnt, size_t size, compare_func_t comparator);
 
 int CompareStringLeftRight(const void* str1, const void* str2);
 int CompareStringRightLeft(const void* str1, const void* str2);

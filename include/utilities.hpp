@@ -47,6 +47,8 @@ struct Storage {
 	size_t str_cnt;
 };
 
+OneginStatusCode FillerDebugPrinter(const String* string);
+OneginStatusCode WorkTime(double time, char* sort_type);
 OneginStatusCode HtmlLogStarter();
 OneginStatusCode HtmlLogFinisher();
 
