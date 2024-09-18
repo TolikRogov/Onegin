@@ -1,14 +1,18 @@
 #include "../include/Onegin.hpp"
 #include "../include/Sorting.hpp"
 
-// TODO:
-//	1) make custom qsort
+const int SIZE = 10;
+int array[SIZE] = {5, 2, 4, 6, 7, 9, 1, 3, 3, 0};
 
 int main(int argc, char* argv[]) {
 
+#ifdef LOG_FILE_SORT
 	clock_t start = clock();
+#endif
 
 	OneginStatusCode status = ONEGIN_NO_ERROR;
+
+	CustomQsort(array, SIZE, sizeof(*array), CompareInt);
 
 	if (argc > 1) {
 
@@ -21,12 +25,14 @@ int main(int argc, char* argv[]) {
 		if (!output)
 			return ONEGIN_FILE_OPEN_ERROR;
 
+#ifdef LOG_FILE_SORT
 		HtmlLogStarter();
+#endif
 
 		status = StorageFiller(&storage, file_paths.onegin_en);
 		ONEGIN_ERROR_CHECK(status);
 
-		void (*Sort) (void*, size_t, size_t, compare_func_t);
+		void (*Sort) (void*, size_t, size_t, compare_func_t) = nullptr;
 
 		if (!CustomStrcmpLeftRight(argv[1], "bubble-sort"))
 			Sort = BubbleSort;
@@ -46,18 +52,20 @@ int main(int argc, char* argv[]) {
 
 		}
 
-			status = StringPrinter(storage.orig_text, storage.str_cnt, output);
-			ONEGIN_ERROR_CHECK(status);
+		status = StringPrinter(storage.orig_text, storage.str_cnt, output);
+		ONEGIN_ERROR_CHECK(status);
 
-			status = StorageDestruct(&storage);
-			ONEGIN_ERROR_CHECK(status);
+		status = StorageDestruct(&storage);
+		ONEGIN_ERROR_CHECK(status);
 
-			fclose(output);
+		fclose(output);
 
-			clock_t end = clock();
-			WorkTime((double)(end - start), argv[1]);
+#ifdef LOG_FILE_SORT
+		clock_t end = clock();
+		WorkTime((double)(end - start), argv[1]);
 
-			HtmlLogFinisher();
+		HtmlLogFinisher();
+#endif
 
 	}
 	else {

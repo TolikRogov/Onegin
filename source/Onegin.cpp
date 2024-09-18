@@ -1,7 +1,5 @@
 #include "../include/Onegin.hpp"
 
-struct stat FILE_STAT = {};
-
 OneginStatusCode StorageFiller(Storage* storage, const char* input_file_path) {
 
 	OneginStatusCode status = ONEGIN_NO_ERROR;
@@ -68,7 +66,9 @@ OneginStatusCode StringFiller(Storage* storage) {
 
 			*(storage->orig_text + cur_str_num) = *(storage->text + cur_str_num);
 
+#ifdef LOG_FILE_SORT
 			FillerDebugPrinter((storage->text + cur_str_num));
+#endif
 
 			cur_str_pointer = storage->buffer + i + 1;
 			cur_str_num++;
@@ -81,12 +81,14 @@ OneginStatusCode StringFiller(Storage* storage) {
 
 OneginStatusCode FileSize(const char* file_path, size_t* size) {
 
+	struct stat file_stat = {};
+
 	OneginStatusCode status = ONEGIN_NO_ERROR;
 
-	status = (OneginStatusCode)stat(file_path, &FILE_STAT);
+	status = (OneginStatusCode)stat(file_path, &file_stat);
 	ONEGIN_ERROR_CHECK(status);
 
-	*size = (size_t)FILE_STAT.st_size;
+	*size = (size_t)file_stat.st_size;
 
 	return ONEGIN_NO_ERROR;
 }
@@ -95,26 +97,30 @@ OneginStatusCode StorageDestruct(Storage* storage) {
 
 	storage->buffer_size = TRASH;
 
-	free(storage->buffer);
-	storage->buffer = NULL;
+	if (storage->buffer) {
+		free(storage->buffer);
+		storage->buffer = NULL;
+	}
 
 	storage->str_cnt = TRASH;
 
-	free(storage->text);
-	storage->text = NULL;
+	if (storage->text) {
+		free(storage->text);
+		storage->text = NULL;
+	}
 
-	free(storage->orig_text);
-	storage->orig_text = NULL;
+	if (storage->orig_text) {
+		free(storage->orig_text);
+		storage->orig_text = NULL;
+	}
 
 	return ONEGIN_NO_ERROR;
 }
 
 OneginStatusCode StringPrinter(String* text, size_t str_cnt, FILE* output) {
 
-	for (size_t i = 0; i < str_cnt; i++) {
-		*((*(text + i)).cur_str + (*(text + i)).cur_str_size - 1) = '\n';
-		fwrite((*(text + i)).cur_str, sizeof(char), (*(text + i)).cur_str_size, output);
-	}
+	for (size_t i = 0; i < str_cnt; i++)
+		fprintf(output, "%s\n", (*(text + i)).cur_str);
 
 	fprintf(output, "\n");
 

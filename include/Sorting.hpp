@@ -16,5 +16,6 @@ int CompareStringRightLeft(const void* str1, const void* str2);
 
 int CustomStrcmpLeftRight(const char* string1, const char* string2);
 int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2_inf);
+int CompareInt(const void* a, const void* b);
 
 #endif //SORTING_INCLUDE
