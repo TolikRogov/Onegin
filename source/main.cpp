@@ -14,6 +14,11 @@ int main(int argc, char* argv[]) {
 
 	CustomQsort(array, SIZE, sizeof(*array), CompareInt);
 
+	for (size_t i = 0; i < SIZE; i++) {
+		fprintf(stderr, "%d ", *(array + i));
+	}
+	fprintf(stderr, "\n");
+
 	if (argc > 1) {
 
 		Storage   storage 	= {};

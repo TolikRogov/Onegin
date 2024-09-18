@@ -2,107 +2,99 @@
 
 void CustomQsort(void* array, size_t cnt, size_t size, compare_func_t comparator) {
 
-	size_t i = 0;
-	size_t j = cnt - 1;
 
-	char* middle = ((char*)array + (cnt / 2) * size);
 
-	fprintf(stderr, "NEW SORT START\n");
-	fprintf(stderr, "cnt = %zu\n", cnt);
-	fprintf(stderr, "array: ");
-	for (size_t k = 0; k < cnt; k++) {
-		fprintf(stderr, "%d ", *((char*)array + k * size));
-	}
-	fprintf(stderr, "\n");
-	fprintf(stderr, "i = %zu, ", i);
-	fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-	fprintf(stderr, "j = %zu, ", j);
-	fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-	fprintf(stderr, "middle = %d\n", *middle);
-	fprintf(stderr, "\n");
-
-	do {
-		fprintf(stderr, "For left elements\n");
-		while (comparator(((char*)array + i * size), middle) < 0)
-			i++;
-		fprintf(stderr, "\nFor right elements\n");
-		while (comparator(((char*)array + j * size), middle) > 0) {
-			j--;
-		}
-		fprintf(stderr, "\n");
-
-		if (i <= j) {
-			for (size_t k = 0; k < size; k++) {
-				char tmp = *(((char*)array + i * size) + k);
-				*(((char*)array + i * size) + k) = *(((char*)array + j * size) + k);
-				*(((char*)array + j * size) + k) = tmp;
-			}
-
-			i++;
-			j--;
-
-			fprintf(stderr, "AFTER SWAP\n");
-			fprintf(stderr, "cnt = %zu\n", cnt);
-			fprintf(stderr, "array: ");
-			for (size_t k = 0; k < cnt; k++) {
-				fprintf(stderr, "%d ", *((char*)array + k * size));
-			}
-			fprintf(stderr, "\n");
-			fprintf(stderr, "i = %zu, ", i);
-			fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-			fprintf(stderr, "j = %zu, ", j);
-			fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-			fprintf(stderr, "middle = %d\n", *middle);
-			fprintf(stderr, "\n");
-		}
-
-	} while (i <= j);
-
-	fprintf(stderr, "BEFORE RECURSION\n");
-	fprintf(stderr, "cnt = %zu\n", cnt);
-	fprintf(stderr, "array: ");
-	for (size_t k = 0; k < cnt; k++) {
-		fprintf(stderr, "%d ", *((char*)array + k * size));
-	}
-	fprintf(stderr, "\n");
-	fprintf(stderr, "i = %zu, ", i);
-	fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-	fprintf(stderr, "j = %zu, ", j);
-	fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-	fprintf(stderr, "middle = %d\n", *middle);
-	fprintf(stderr, "\n");
-
-	if (j > 1)
-		CustomQsort(array, j + 1, size, comparator);
-	if (i < cnt) {
-		fprintf(stderr, "BEFORE RIGHT SIDE SORT\n");
-		fprintf(stderr, "cnt = %zu\n", cnt);
-		fprintf(stderr, "i = %zu, ", i);
-		fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-		fprintf(stderr, "j = %zu, ", j);
-		fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-		fprintf(stderr, "middle = %d\n", *middle);
-		fprintf(stderr, "array start element = %d\n", *(char*)array);
-		fprintf(stderr, "\n");
-		CustomQsort(((char*)array + (i + 1) * size), cnt - (j + 1), size, comparator);
-	}
+// 	size_t i = 0;
+// 	size_t j = cnt - 1;
+//
+// 	char* middle = ((char*)array + (cnt / 2) * size);
+//
+// 	fprintf(stderr, "NEW SORT START\n");
+// 	fprintf(stderr, "cnt = %zu\n", cnt);
+// 	fprintf(stderr, "array: ");
+// 	for (size_t k = 0; k < cnt; k++) {
+// 		fprintf(stderr, "%d ", *((char*)array + k * size));
+// 	}
+// 	fprintf(stderr, "\n");
+// 	fprintf(stderr, "i = %zu, ", i);
+// 	fprintf(stderr, "left = %d\n", *((char*)array + i * size));
+// 	fprintf(stderr, "j = %zu, ", j);
+// 	fprintf(stderr, "right = %d\n", *((char*)array + j * size));
+// 	fprintf(stderr, "middle = %d\n", *middle);
+// 	fprintf(stderr, "\n");
+//
+// 	do {
+// 		// fprintf(stderr, "For left elements\n");
+// 		while (comparator(((char*)array + i * size), middle) < 0)
+// 			i++;
+// 		// fprintf(stderr, "\nFor right elements\n");
+// 		while (comparator(((char*)array + j * size), middle) > 0)
+// 			j--;
+// 		// fprintf(stderr, "\n");
+//
+// 		if (i <= j) {
+// 			for (size_t k = 0; k < size; k++) {
+// 				char tmp = *(((char*)array + i * size) + k);
+// 				*(((char*)array + i * size) + k) = *(((char*)array + j * size) + k);
+// 				*(((char*)array + j * size) + k) = tmp;
+// 			}
+//
+// 			i++;
+// 			j--;
+//
+// 			fprintf(stderr, "AFTER SWAP\n");
+// 			fprintf(stderr, "cnt = %zu\n", cnt);
+// 			fprintf(stderr, "array: ");
+// 			for (size_t k = 0; k < cnt; k++) {
+// 				fprintf(stderr, "%d ", *((char*)array + k * size));
+// 			}
+// 			fprintf(stderr, "\n");
+// 			fprintf(stderr, "i = %zu, ", i);
+// 			fprintf(stderr, "left = %d\n", *((char*)array + i * size));
+// 			fprintf(stderr, "j = %zu, ", j);
+// 			fprintf(stderr, "right = %d\n", *((char*)array + j * size));
+// 			fprintf(stderr, "middle = %d\n", *middle);
+// 			fprintf(stderr, "\n");
+// 		}
+//
+// 	} while (i <= j);
+//
+// 	fprintf(stderr, "BEFORE RECURSION\n");
+// 	fprintf(stderr, "cnt = %zu\n", cnt);
+// 	fprintf(stderr, "array: ");
+// 	for (size_t k = 0; k < cnt; k++) {
+// 		fprintf(stderr, "%d ", *((char*)array + k * size));
+// 	}
+// 	fprintf(stderr, "\n");
+// 	fprintf(stderr, "i = %zu, ", i);
+// 	fprintf(stderr, "left = %d\n", *((char*)array + i * size));
+// 	fprintf(stderr, "j = %zu, ", j);
+// 	fprintf(stderr, "right = %d\n", *((char*)array + j * size));
+// 	fprintf(stderr, "middle = %d\n", *middle);
+// 	fprintf(stderr, "\n");
+//
+// 	if (j > 1)
+// 		CustomQsort(array, j + 1, size, comparator);
+// 	if (i < cnt) {
+// 		fprintf(stderr, "BEFORE RIGHT SIDE SORT\n");
+// 		fprintf(stderr, "cnt = %zu\n", cnt);
+// 		fprintf(stderr, "i = %zu, ", i);
+// 		fprintf(stderr, "left = %d\n", *((char*)array + i * size));
+// 		fprintf(stderr, "j = %zu, ", j);
+// 		fprintf(stderr, "right = %d\n", *((char*)array + j * size));
+// 		fprintf(stderr, "middle = %d\n", *middle);
+// 		fprintf(stderr, "array start element = %d\n", *(char*)array);
+// 		fprintf(stderr, "\n");
+// 		CustomQsort(((char*)array + (i - 1) * size), cnt - (j + 1), size, comparator);
+// 	}
 }
 
 void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator) {
 
 	for (size_t i = 0; i < cnt - 1; i++) {
 		for (size_t j = i + 1; j < cnt; j++) {
-
-			if (comparator(((char*)array + i * size), ((char*)array + j * size)) > 0) {
-
-				for (size_t k = 0; k < size; k++) {
-					char tmp = *(((char*)array + i * size) + k);
-					*(((char*)array + i * size) + k) = *(((char*)array + j * size) + k);
-					*(((char*)array + j * size) + k) = tmp;
-				}
-
-			}
-
+			if (comparator(((char*)array + i * size), ((char*)array + j * size)) > 0)
+				SwapByByte(((char*)array + i * size), ((char*)array + j * size), size);
 		}
 	}
 
@@ -179,10 +171,16 @@ int CompareInt(const void* a, const void* b) {
 	int _a = *(const int*)a;
 	int _b = *(const int*)b;
 
-	fprintf(stderr, "a = %d, ", _a);
-	fprintf(stderr, "b = %d, ", _b);
-	fprintf(stderr, "a - b = %d\n", _a - _b);
-
 	return _a - _b;
+
+}
+
+void SwapByByte(void* a, void* b, size_t size) {
+
+	for (size_t i = 0; i < size; i++) {
+		char tmp = *((char*)a + i);
+		*((char*)a + i) = *((char*)b + i);
+		*((char*)b + i) = tmp;
+	}
 
 }
