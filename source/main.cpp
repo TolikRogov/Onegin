@@ -1,9 +1,6 @@
 #include "../include/Onegin.hpp"
 #include "../include/Sorting.hpp"
 
-const int SIZE = 10;
-int array[SIZE] = {5, 2, 4, 6, 7, 9, 1, 3, 3, 0};
-
 int main(int argc, char* argv[]) {
 
 #ifdef LOG_FILE_SORT
@@ -11,13 +8,6 @@ int main(int argc, char* argv[]) {
 #endif
 
 	OneginStatusCode status = ONEGIN_NO_ERROR;
-
-	CustomQsort(array, SIZE, sizeof(*array), CompareInt);
-
-	for (size_t i = 0; i < SIZE; i++) {
-		fprintf(stderr, "%d ", *(array + i));
-	}
-	fprintf(stderr, "\n");
 
 	if (argc > 1) {
 

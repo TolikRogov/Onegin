@@ -2,91 +2,29 @@
 
 void CustomQsort(void* array, size_t cnt, size_t size, compare_func_t comparator) {
 
+	if ((char*)array < ((char*)array + (cnt - 1) * size)) {
+		char* middle_index = Partition(array, cnt, size, comparator);
+		CustomQsort(array, (size_t)((char*)middle_index - (char*)array) / size, size, comparator);
+		CustomQsort(middle_index, (size_t)((char*)array + cnt * size - (char*)middle_index) / size, size, comparator);
+	}
 
+}
 
-// 	size_t i = 0;
-// 	size_t j = cnt - 1;
-//
-// 	char* middle = ((char*)array + (cnt / 2) * size);
-//
-// 	fprintf(stderr, "NEW SORT START\n");
-// 	fprintf(stderr, "cnt = %zu\n", cnt);
-// 	fprintf(stderr, "array: ");
-// 	for (size_t k = 0; k < cnt; k++) {
-// 		fprintf(stderr, "%d ", *((char*)array + k * size));
-// 	}
-// 	fprintf(stderr, "\n");
-// 	fprintf(stderr, "i = %zu, ", i);
-// 	fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-// 	fprintf(stderr, "j = %zu, ", j);
-// 	fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-// 	fprintf(stderr, "middle = %d\n", *middle);
-// 	fprintf(stderr, "\n");
-//
-// 	do {
-// 		// fprintf(stderr, "For left elements\n");
-// 		while (comparator(((char*)array + i * size), middle) < 0)
-// 			i++;
-// 		// fprintf(stderr, "\nFor right elements\n");
-// 		while (comparator(((char*)array + j * size), middle) > 0)
-// 			j--;
-// 		// fprintf(stderr, "\n");
-//
-// 		if (i <= j) {
-// 			for (size_t k = 0; k < size; k++) {
-// 				char tmp = *(((char*)array + i * size) + k);
-// 				*(((char*)array + i * size) + k) = *(((char*)array + j * size) + k);
-// 				*(((char*)array + j * size) + k) = tmp;
-// 			}
-//
-// 			i++;
-// 			j--;
-//
-// 			fprintf(stderr, "AFTER SWAP\n");
-// 			fprintf(stderr, "cnt = %zu\n", cnt);
-// 			fprintf(stderr, "array: ");
-// 			for (size_t k = 0; k < cnt; k++) {
-// 				fprintf(stderr, "%d ", *((char*)array + k * size));
-// 			}
-// 			fprintf(stderr, "\n");
-// 			fprintf(stderr, "i = %zu, ", i);
-// 			fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-// 			fprintf(stderr, "j = %zu, ", j);
-// 			fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-// 			fprintf(stderr, "middle = %d\n", *middle);
-// 			fprintf(stderr, "\n");
-// 		}
-//
-// 	} while (i <= j);
-//
-// 	fprintf(stderr, "BEFORE RECURSION\n");
-// 	fprintf(stderr, "cnt = %zu\n", cnt);
-// 	fprintf(stderr, "array: ");
-// 	for (size_t k = 0; k < cnt; k++) {
-// 		fprintf(stderr, "%d ", *((char*)array + k * size));
-// 	}
-// 	fprintf(stderr, "\n");
-// 	fprintf(stderr, "i = %zu, ", i);
-// 	fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-// 	fprintf(stderr, "j = %zu, ", j);
-// 	fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-// 	fprintf(stderr, "middle = %d\n", *middle);
-// 	fprintf(stderr, "\n");
-//
-// 	if (j > 1)
-// 		CustomQsort(array, j + 1, size, comparator);
-// 	if (i < cnt) {
-// 		fprintf(stderr, "BEFORE RIGHT SIDE SORT\n");
-// 		fprintf(stderr, "cnt = %zu\n", cnt);
-// 		fprintf(stderr, "i = %zu, ", i);
-// 		fprintf(stderr, "left = %d\n", *((char*)array + i * size));
-// 		fprintf(stderr, "j = %zu, ", j);
-// 		fprintf(stderr, "right = %d\n", *((char*)array + j * size));
-// 		fprintf(stderr, "middle = %d\n", *middle);
-// 		fprintf(stderr, "array start element = %d\n", *(char*)array);
-// 		fprintf(stderr, "\n");
-// 		CustomQsort(((char*)array + (i - 1) * size), cnt - (j + 1), size, comparator);
-// 	}
+char* Partition(void* array, size_t cnt, size_t size, compare_func_t comparator) {
+
+	char* middle_index = (char*)array;
+	char* middle_value = ((char*)array + (cnt - 1) * size);
+
+	for (char* j = (char*)array; j < ((char*)array + (cnt - 1) * size); j += size) {
+		if (comparator(j, middle_value) <= 0) {
+			SwapByByte(j, middle_index, size);
+			middle_index += size;
+		}
+	}
+
+	SwapByByte(middle_index, ((char*)array + (cnt - 1) * size), size);
+
+	return middle_index;
 }
 
 void BubbleSort(void* array, size_t cnt, size_t size, compare_func_t comparator) {
@@ -164,15 +102,6 @@ int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2
 	}
 
 	return tolower(*(str1_inf->cur_str + str1_pnt)) - tolower(*(str2_inf->cur_str + str2_pnt));
-}
-
-int CompareInt(const void* a, const void* b) {
-
-	int _a = *(const int*)a;
-	int _b = *(const int*)b;
-
-	return _a - _b;
-
 }
 
 void SwapByByte(void* a, void* b, size_t size) {
