@@ -92,7 +92,7 @@ OneginStatusCode HtmlLogStarter() {
 	return ONEGIN_NO_ERROR;
 }
 
-OneginStatusCode WorkTime(double time, char* sort_type) {
+OneginStatusCode WorkTime(double time, const char* sort_type) {
 
 	printf("\t\t</table>\n");
 	printf("\t\t<p class='time'><a name='time'><tt>Working Time with %s: %lf ms</tt></a></p>\n",

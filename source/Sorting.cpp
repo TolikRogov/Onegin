@@ -15,9 +15,9 @@ char* Partition(void* array, size_t cnt, size_t size, compare_func_t comparator)
 	char* middle_index = (char*)array;
 	char* middle_value = ((char*)array + (cnt - 1) * size);
 
-	for (char* j = (char*)array; j < ((char*)array + (cnt - 1) * size); j += size) {
-		if (comparator(j, middle_value) <= 0) {
-			SwapByByte(j, middle_index, size);
+	for (char* i = (char*)array; i < ((char*)array + (cnt - 1) * size); i += size) {
+		if (comparator(i, middle_value) <= 0) {
+			SwapByByte(i, middle_index, size);
 			middle_index += size;
 		}
 	}
@@ -68,14 +68,16 @@ int CustomStrcmpLeftRight(const char* string1, const char* string2) {
 				str2_pnt++;
 		}
 
-		if (tolower(*(string1 + str1_pnt)) != tolower(*(string2 + str2_pnt)))
+		if (tolower(*(string1 + str1_pnt)) !=
+			tolower(*(string2 + str2_pnt)))
 			break;
 
 		str1_pnt++;
 		str2_pnt++;
 	}
 
-	return tolower(*(string1 + str1_pnt)) - tolower(*(string2 + str2_pnt));
+	return tolower(*(string1 + str1_pnt)) -
+		   tolower(*(string2 + str2_pnt));
 }
 
 int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2_inf) {
@@ -99,7 +101,8 @@ int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2
 		str2_pnt--;
 	}
 
-	return tolower(*(str1_inf->cur_str + str1_pnt)) - tolower(*(str2_inf->cur_str + str2_pnt));
+	return tolower(*(str1_inf->cur_str + str1_pnt)) -
+		   tolower(*(str2_inf->cur_str + str2_pnt));
 }
 
 void SwapByByte(void* a, void* b, size_t size) {
@@ -110,4 +113,16 @@ void SwapByByte(void* a, void* b, size_t size) {
 		*((char*)b + i) = tmp;
 	}
 
+}
+
+int StrCmp(const char* s1, const char* s2) {
+
+	size_t i = 0;
+
+	for (; *(s1 + i) != '\0' && *(s2 + i) != '\0'; i++) {
+		if (*(s1 + i) != *(s2 + i))
+			break;
+	}
+
+	return *(s1 + i) - *(s2 + i);
 }

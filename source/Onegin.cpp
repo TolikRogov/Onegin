@@ -11,14 +11,14 @@ OneginStatusCode StorageFiller(Storage* storage, const char* input_file_path) {
 	if(!input)
 		return ONEGIN_FILE_OPEN_ERROR;
 
-	storage->buffer = (char*)calloc(storage->buffer_size, sizeof(char));
+	storage->buffer = (char*)calloc(storage->buffer_size + 1, sizeof(char));
 	if (!storage->buffer) {
 		StorageDestruct(storage);
 		return ONEGIN_ALLOC_ERROR;
 	}
 
-	size_t read_inf_cnt = fread(storage->buffer, storage->buffer_size, sizeof(char), input);
-	if (!read_inf_cnt)
+	size_t read_inf_cnt = fread(storage->buffer, sizeof(char), storage->buffer_size, input);
+	if (read_inf_cnt != storage->buffer_size)
 		return ONEGIN_FILE_READ_ERROR;
 
 	status = StringsAddrFiller(storage);
