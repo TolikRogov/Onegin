@@ -27,7 +27,7 @@ int main(int argc, char* argv[]) {
 		status = StorageFiller(&storage, file_paths.onegin_en);
 		ONEGIN_ERROR_CHECK(status);
 
-		void (*Sort) (void*, size_t, size_t, compare_func_t) = nullptr;
+		void (*Sort) (void*, size_t, size_t, compare_func_t) = NULL;
 
 		if (!CustomStrcmpLeftRight(argv[1], "bubble-sort"))
 			Sort = BubbleSort;

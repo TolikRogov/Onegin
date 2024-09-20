@@ -10,8 +10,8 @@
 
 #define ONEGIN_ERROR_CHECK(status) {																	 		 \
 	if (status != ONEGIN_NO_ERROR) {																			\
-		fprintf(stderr, "\033[31;1mError code: %d,\033[0m \033[33;4mFile: %s, Function: %s, Line: %d \n\033[0m",\
-				status, __FILE__, __PRETTY_FUNCTION__, __LINE__);												\
+		fprintf(stderr, "\033[31;1mError %d: %s,\033[0m \033[33;4mFile: %s, Function: %s, Line: %d \n\033[0m",  \
+				status, ErrorsMessenger(status), __FILE__, __PRETTY_FUNCTION__, __LINE__);						\
 		return status;																							\
 	}																											\
 }
@@ -51,5 +51,6 @@ OneginStatusCode FillerDebugPrinter(const String* string);
 OneginStatusCode WorkTime(double time, char* sort_type);
 OneginStatusCode HtmlLogStarter();
 OneginStatusCode HtmlLogFinisher();
+const char* ErrorsMessenger(OneginStatusCode status);
 
 #endif //UTILITIES_INCLUDE

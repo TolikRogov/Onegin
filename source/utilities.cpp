@@ -95,7 +95,7 @@ OneginStatusCode HtmlLogStarter() {
 OneginStatusCode WorkTime(double time, char* sort_type) {
 
 	printf("\t\t</table>\n");
-	printf("\t\t<p class='time'><a name='time'><tt>Working Time with %s: %lf</tt></a></p>\n",
+	printf("\t\t<p class='time'><a name='time'><tt>Working Time with %s: %lf ms</tt></a></p>\n",
 			sort_type, time / CLOCKS_PER_SEC);
 
 	return ONEGIN_NO_ERROR;
@@ -110,4 +110,15 @@ OneginStatusCode HtmlLogFinisher() {
 	system("open log_eblan.html");
 
 	return ONEGIN_NO_ERROR;
+}
+
+const char* ErrorsMessenger(OneginStatusCode status) {
+	switch(status) {
+		case ONEGIN_NO_ERROR:		 return "NO ERROR";
+		case ONEGIN_FILE_OPEN_ERROR: return "FILE OPEN ERROR";
+		case ONEGIN_FILE_READ_ERROR: return "FILE READ ERROR";
+		case ONEGIN_ALLOC_ERROR: 	 return "ALLOCATION ERROR";
+		case ONEGIN_SORT_MODE_ERROR: return "SORT MODE ERROR";
+		default: 					 return "UNDEFINED ERROR";
+	}
 }

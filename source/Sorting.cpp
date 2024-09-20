@@ -66,7 +66,6 @@ int CustomStrcmpLeftRight(const char* string1, const char* string2) {
 				str1_pnt++;
 			while (!isalpha(*(string2 + str2_pnt)) && (*(string2 + str2_pnt)) != '\0')
 				str2_pnt++;
-			continue;
 		}
 
 		if (tolower(*(string1 + str1_pnt)) != tolower(*(string2 + str2_pnt)))
@@ -91,7 +90,6 @@ int CustomStrcmpRightLeft(const String* const str1_inf, const String* const str2
 				str1_pnt--;
 			while (!isalpha(*(str2_inf->cur_str + str2_pnt)) && str2_pnt != 0)
 				str2_pnt--;
-			continue;
 		}
 
 		if (tolower(*(str1_inf->cur_str + str1_pnt)) != tolower(*(str2_inf->cur_str + str2_pnt)))
