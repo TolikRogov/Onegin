@@ -4,22 +4,22 @@ OneginStatusCode StorageFiller(Storage* storage, const char* input_file_path) {
 
 	OneginStatusCode status = ONEGIN_NO_ERROR;
 
-	status = FileSize(input_file_path, &storage->buffer_size);
-	ONEGIN_ERROR_CHECK(status);
-
 	FILE* input = fopen(input_file_path, "rb");
 	if(!input)
-		return ONEGIN_FILE_OPEN_ERROR;
+		ONEGIN_ERROR_CHECK(ONEGIN_FILE_OPEN_ERROR);
+
+	status = FileSize(input_file_path, &storage->buffer_size);
+	ONEGIN_ERROR_CHECK(status);
 
 	storage->buffer = (char*)calloc(storage->buffer_size + 1, sizeof(char));
 	if (!storage->buffer) {
 		StorageDestruct(storage);
-		return ONEGIN_ALLOC_ERROR;
+		ONEGIN_ERROR_CHECK(ONEGIN_ALLOC_ERROR);
 	}
 
 	size_t read_inf_cnt = fread(storage->buffer, sizeof(char), storage->buffer_size, input);
 	if (read_inf_cnt != storage->buffer_size)
-		return ONEGIN_FILE_READ_ERROR;
+		ONEGIN_ERROR_CHECK(ONEGIN_FILE_READ_ERROR);
 
 	status = StringsAddrFiller(storage);
 	ONEGIN_ERROR_CHECK(status);
@@ -39,13 +39,13 @@ OneginStatusCode StringsAddrFiller(Storage* storage) {
 	storage->text = (String*)calloc(storage->str_cnt, sizeof(String));
 	if (!storage->text) {
 		StorageDestruct(storage);
-		return ONEGIN_ALLOC_ERROR;
+		ONEGIN_ERROR_CHECK(ONEGIN_ALLOC_ERROR);
 	}
 
 	storage->orig_text = (String*)calloc(storage->str_cnt, sizeof(String));
 	if (!storage->text) {
 		StorageDestruct(storage);
-		return ONEGIN_ALLOC_ERROR;
+		ONEGIN_ERROR_CHECK(ONEGIN_ALLOC_ERROR);
 	}
 
 	status = StringFiller(storage);

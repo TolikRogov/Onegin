@@ -1,0 +1,19 @@
+#!/bin/bash
+
+make clean
+clear
+make
+echo "List of files: "
+
+echo
+find data -type f -not -name "output*" -not -name ".DS_Store"
+echo
+
+read -p "Input path of file: " file_path
+
+echo
+echo "Choose method of sorting: bubble-sort, lib-qsort or custom-qsort"
+echo
+
+read sort_mode
+./build/onegin $file_path $sort_mode
