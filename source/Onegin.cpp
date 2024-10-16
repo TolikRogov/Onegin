@@ -63,6 +63,11 @@ OneginStatusCode StringFiller(Storage* storage) {
 
 	for (size_t i = 0; i < storage->buffer_size; i++) {
 
+		if (*(storage->buffer + i) == '\n') {
+			cur_str_pointer = storage->buffer + i + 1;
+			continue;
+		}
+
 		cur_str_size++;
 
 		if (*(storage->buffer + i) == '\0') {
@@ -139,6 +144,9 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 		if (*(storage->buffer + i) == '\n') {
 			*(storage->buffer + i) = '\0';
 			storage->str_cnt++;
+
+			while (*(storage->buffer + i + 1) == '\n')
+				i++;
 		}
 	}
 
