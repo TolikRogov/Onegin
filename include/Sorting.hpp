@@ -1,7 +1,7 @@
 #ifndef SORTING_INCLUDE
 #define SORTING_INCLUDE
 
-#include "../include/utilities.hpp"
+#include "utilities.hpp"
 
 enum SortingMode {
 	FROM_LEFT_TO_RIGHT,

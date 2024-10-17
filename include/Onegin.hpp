@@ -1,7 +1,7 @@
 #ifndef ONEGIN_INCLUDE
 #define ONEGIN_INCLUDE
 
-#include "../include/utilities.hpp"
+#include "utilities.hpp"
 
 const size_t TRASH = 0xBEDA0DED0BEDA;
 
