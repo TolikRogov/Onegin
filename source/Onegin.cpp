@@ -142,7 +142,7 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 
 	for (size_t i = 0; i < storage->buffer_size; i++) {
 		if (i == 0) {
-			while (*(storage->buffer + i) == ' ')
+			while (*(storage->buffer + i) == ' ' || *(storage->buffer + i) == '\t')
 				*(storage->buffer + i++) = '\n';
 		}
 
@@ -150,7 +150,7 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 			*(storage->buffer + i) = '\0';
 			storage->str_cnt++;
 
-			while (*(storage->buffer + i + 1) == ' ')
+			while (*(storage->buffer + i + 1) == ' ' || *(storage->buffer + i + 1) == '\t')
 				*(storage->buffer + i++ + 1) = '\n';
 			while (*(storage->buffer + i + 1) == '\n')
 				i++;
