@@ -141,10 +141,17 @@ OneginStatusCode StringPrinter(String* text, size_t str_cnt, FILE* output) {
 OneginStatusCode CharNewLineToZero(Storage* storage) {
 
 	for (size_t i = 0; i < storage->buffer_size; i++) {
+		if (i == 0) {
+			while (*(storage->buffer + i) == ' ')
+				*(storage->buffer + i++) = '\n';
+		}
+
 		if (*(storage->buffer + i) == '\n') {
 			*(storage->buffer + i) = '\0';
 			storage->str_cnt++;
 
+			while (*(storage->buffer + i + 1) == ' ')
+				*(storage->buffer + i++ + 1) = '\n';
 			while (*(storage->buffer + i + 1) == '\n')
 				i++;
 		}
