@@ -154,6 +154,8 @@ OneginStatusCode CharNewLineToZero(Storage* storage) {
 				*(storage->buffer + i++ + 1) = '\n';
 			while (*(storage->buffer + i + 1) == '\n')
 				i++;
+			while (*(storage->buffer + i + 1) == ' ' || *(storage->buffer + i + 1) == '\t')
+				*(storage->buffer + i++ + 1) = '\n';
 		}
 	}
 
