@@ -1,10 +1,6 @@
 #!/bin/bash
 
-make clean
-clear
-make
 echo "List of files: "
-
 echo
 find data -type f -not -name "output*" -not -name ".DS_Store"
 echo
@@ -16,4 +12,9 @@ echo "Choose method of sorting: bubble-sort, lib-qsort or custom-qsort"
 echo
 
 read sort_mode
-./build/onegin $file_path $sort_mode
+
+# cmake -S ./ -B build/Release -DCMAKE_BUILD_TYPE=Release
+# cmake --build build/Release && ./build/Release/Onegin $file_path $sort_mode
+
+cmake -S ./ -B build/Debug -DCMAKE_BUILD_TYPE=Debug
+cmake --build build/Debug && (./build/Debug/Onegin $file_path $sort_mode)
